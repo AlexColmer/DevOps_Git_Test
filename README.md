@@ -61,6 +61,101 @@ A container is a standard unit of software that packages up code and all its dep
 - If you needed to install WS2 separtaly, kill the old Docker process in Task Manager. Then run it again.
 - run `docker --version` in terminal/gitbash to check version (`docker` for cheat-sheet)
 
+## Early commands
+- Run `docker pull hello-world`
+- Run `docker images` -> Will show images downloaded (just this one now)
+- If you need to login, please use `alias docker="winpty docker"`
+- You can also use docker ddesktop app to verify the image has downloaded
+
+![Alt text](/images/docker_hello-world.jpg "Hello-world image in desktop app")
+
+- Now run `docker run hello-world`
+
+Output:
+
+![Alt text](/images/docker_hello-world_run.jpg "Hello-world image running after command")
+
+- Check running containers on the maachine
+```
+docker ps
+```
+
+- Check all containers (on or off)
+```
+docker ps -a
+```
+
+Delete a process:
+```
+docker rm ID -f
+```
+
+Run a detached container with the program so we can still use out terminal
+```
+docker run -d -p 80:80 nginx
+```
+
+See logs of a detached container
+```
+docker logs ID
+```
+
+## Powerful example
+Full Docker documentation running on your machine with one command:
+```
+docker run -d -p 4000:4000 docs/docker.github.io
+```
+
+A heavy duty dynamic site out of the box.
+
+ ![Alt text](/images/docker_docs_running.jpg "Full documentation of docker running on my machine")
+
+Top tip: Conatiners are persistent, this means data in them will remain availbe as long as it is not terminated.
+
+## How to enter the container:
+```
+docker exec -it ID bash
+```
+If you cannot get in, run: `alias docker="winpty docker"` and try again
+
+From here we can run all the usual commands. Make sure to check the OS with `uname -a` before you start.
+
+Note, most containers will have absolutely nothing on them, so you my need to `apt install` things like sudo and nano etc.
+
+## using Docker in practice
+
+We are going to make a static website (thus only needing one container), and make an image of it in Docker that we can use for easy access to it going forward.
+
+Step 1: Create index.html locally
+- Create index.html locally (wherever you want) and save it.
+- Add your html, for this case I am just going to take a template from https://devsnap.me/html-resume-templates
+- Save
+
+Step 2: Copy the file to the container
+- Run `docker ps`, to get the id of the container
+- Enter the container and delete the index.html already in: usr/share/nginx/html
+- Run the command: `docker cp index.html conatiner_id:usr/share/nginx/html/index.html`
+- This should copy the file to the correct directory on the container
+- Log in to the container again, navigate to usr/share/nginx/html and run `ls` the file should be there
+- Run `cat index.html` to verify the contents have been copied
+- Go to localhost in your browser, the file should be dispalyed.
+
+Step 3: Add css to container
+- Repeat step two, this time for your css file
+- Check localhost to see the changes in effect
+
+Step 4: Add image from folder
+- To add a single file from a folder use this:
+`docker cp images/luke_iamge_2.jpg e4f41158e8e9:usr/share/nginx/html/images/luke_image_2.jpg`
+
+Step 5: create a new image with the static website included
+- Tag the current container `docker tag e786aaf0622d eng130_luke_cv`
+- Stop the current container
+- Run the new version `docker run -d -p 80:80 eng130_luke_cv`
+- Commit the image to your repo `docker commit container name (will be random) lsf970/eng130_luke_cv:latest` 
+- Push to dockerhub `docker push lsf970/eng130_luke_cv:latest`
+- Check Dockerhub, image should be there
+
 ## Docker cheat-sheet
 ```
 A self-sufficient runtime for containers
