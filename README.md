@@ -1,4 +1,5 @@
 ## Microservices
+Microservice = A service that does one job, and has an endpoint to connect to (e.g. API, IP, Webhook etc.)
 
 NOTE - Monoliths and two-tier architecctures are still vaible and can be the correct dpeloyment structure in certain use cases. For example for a small projecct with a low number of users, and the user base is not expected to increase. A monolith architecture is most effective.
 
@@ -155,6 +156,191 @@ Step 5: create a new image with the static website included
 - Commit the image to your repo `docker commit container name (will be random) lsf970/eng130_luke_cv:latest` 
 - Push to dockerhub `docker push lsf970/eng130_luke_cv:latest`
 - Check Dockerhub, image should be there
+
+## Automating the process
+
+Make a Dockerfile in the same folder (on localhost):
+
+`nano Dockerfile`
+
+Note that it is extensionless
+
+In the Dockerfile add:
+
+```
+FROM nginx
+# Who is creating this? Optional
+LABEL MAINTAINER=luke@spartaglobal.com
+
+# Created index.html cv - copy to container (default location -> usr/share/nginx/html/)
+COPY index.html /usr/share/nginx/html/
+
+# Commit the change
+
+# Push the new image
+
+# Pull the image from repo
+
+# Run -> run -d -p 80:80 name
+
+# Port number
+EXPOSE 80
+
+# Launch the server
+CMD ["nginx", "-g", "daemon off;"]
+
+# Note - each command is a layer in the eventual zip
+
+```
+
+Now save it with Ctrl + X
+
+Run `docker build -t lsf970/eng130_cv_html_only .`
+
+Screenshot of successful build:
+
+
+Run `docker run -d -p 80:80 lsf970/eng130_cv_html_only`
+This makes a container of the image
+
+Verify the continer is working as expected, by going to localhost
+
+Once verified we can push it to a new repository
+
+Make a new repository on dockerhub
+
+Then commit the container with the command:
+
+```
+# example with place holders
+# docker commit container_id _or_name dockerhub_username/repo_name:tag
+
+# Real command
+docker commit nice_hawking lsf970/eng130_app_v1:latest
+```
+Now we can push to that repo
+```
+docker push lsf970/eng130_app_v1:latest
+```
+Check the repo on dockerhub, the image should now be there
+
+In order to verify it's contents and functionality, run:
+```
+docker pull lsf970/eng130_app_v1
+```
+
+And then run the new version
+```
+docker ps # get the id of current container process
+docker stop container_id # stop the old version
+docker run -d -p 80:3000 lsf970/eng130_app_v1 # run the pulled version
+# check localhost to verify
+```
+
+## How to set up the node app as a Docker image
+Step 1: Create a new folder and a new Dockerfile within it
+
+Step 2: Copy the app folder with the node app to the new folder
+
+Step 3: Go into the Dockerfile with `nano Dockerfile`, and add YAML
+
+Step 3.1:
+```
+FROM nginx
+```
+We still want to use nginx as a webserver, so use it as a base image
+
+Step 3.2:
+```
+LABEL MAINTAINER=eng130-luke
+```
+Optional but you can add your name to the image
+
+Step 3.3:
+```
+  WORKDIR /home/
+  COPY app /home/ 
+```
+Here we set the working directory on the ccontainer and copy our app folder
+
+Step 3.4:
+```
+EXPOSE 80
+EXPOSE 3000
+```
+Expose the required ports. 80 for http and 3000 for nodejs
+
+Step 3.5: 
+```
+  RUN apt-get update
+  RUN apt-get install -y
+  RUN apt-get install software-properties-common -y
+  RUN apt-get install npm -y
+```
+Run the required commmands on the container to get node and npm
+
+Step 3.6:
+```
+CMD ["nginx", "-g", "daemon off;"]
+WORKDIR /home/app
+RUN npm install
+# CMD ["npm", "start"]
+CMD ["node", "app.js"]
+```
+Start nginx, install the app with npm install and start it with npm install
+
+Step 3.7: Bring it all together
+```
+FROM nginx
+
+  LABEL MAINTAINER=eng130-luke
+
+  WORKDIR /home/
+  COPY app /home/ 
+  # COPY environment /home/
+
+  EXPOSE 80
+  EXPOSE 3000
+
+  RUN apt-get update
+  RUN apt-get install -y
+  RUN apt-get install software-properties-common -y
+  RUN apt-get install npm -y
+
+  CMD ["nginx", "-g", "daemon off;"]
+  WORKDIR /home/app
+  RUN npm install
+  # CMD ["npm", "start"]
+  CMD ["node", "app.js"]
+
+```
+Step 4:
+Now we can build the image:
+```
+docker build -t lsf970/eng130_app_v1 .
+```
+
+Step 5: Run the image as a container
+```
+docker run -d -p 80:3000 eng130_v1 . 
+```
+Step 5.1: Check it  works in the browser
+
+Step 6: If it does, commit the image
+```
+docker commit container_id lsf970/eng130_app_v1:latest
+```
+
+Step 7: Push the image to dockerhub
+```
+docker push lsf970/eng130_app_v1:latest
+```
+Step 8: Pull the version from dockerhub
+```
+docker pull lsf970/eng130_app_v1
+```
+
+Step 9: stop the current running container and then run the new on that you have pulled
 
 ## Docker cheat-sheet
 ```
