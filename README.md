@@ -1,6 +1,8 @@
 ## Microservices
 Microservice = A service that does one job, and has an endpoint to connect to (e.g. API, IP, Webhook etc.)
 
+Great article: https://www.atlassian.com/microservices/microservices-architecture/microservices-vs-monolith#:~:text=A%20monolithic%20application%20is%20built,of%20smaller%2C%20independently%20deployable%20services.
+
 NOTE - Monoliths and two-tier architecctures are still vaible and can be the correct dpeloyment structure in certain use cases. For example for a small projecct with a low number of users, and the user base is not expected to increase. A monolith architecture is most effective.
 
 #### Benefits of Microservices
@@ -25,7 +27,19 @@ Microservices becomes more and more viable the large the project/app is and the 
 
 ### Monolith architecture vs Microservices architecture
 
-![Alt text](/images/monolith_vs_microservices.png "Monolith's vs Microservices")
+A monolith application is built as a single unified unit, while a microservices architecture is a collection of smaller, independantly deployable services. Monolith's are not obsolete by any means. They are convinient to set up and allows for the entire project's code to be kept in one place, making it's management and deployment easy too.
+
+Monolith advantages:
+- Easy deployment
+- Easier to develop (less to manage)
+- Improved performance (less API's needed for example)
+- Simple testing (end to end is all in one system)
+- Easy debugging (code is in one place so it's easier to follow the path to the root cause of an issue)
+
+Monolith disadvantages:
+- 
+
+![Alt text](/images/atlassian_monolith.png "Monolith architecture by Atlassian")
 
 ![Alt text](/images/monolith-vs-microservice2.png "Monolith's vs Microservices2")
 
