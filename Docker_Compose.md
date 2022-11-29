@@ -188,3 +188,13 @@ And that is it! If we run `docker compose up` from the root directory the YAML f
 Check localhost to see if the app is working. Then check localhost/posts to see if the database is connected and seeded.
 
 Now you have confimred this, stop the two containers with `docker stop` and the container id. Once both are stopped use `docker compose up -d` to run both containers in the background. This gives you access to your terminal while the conatiners run.
+
+## If you get the error: strconv.Atoi: parsing "": invalid syntax
+
+run the command 
+
+```
+docker-compose down --remove-orphans
+```
+
+It will get rid of any ghost containers stopping your compose up from running.

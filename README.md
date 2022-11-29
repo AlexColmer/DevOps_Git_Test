@@ -356,6 +356,11 @@ docker pull lsf970/eng130_app_v1
 
 Step 9: stop the current running container and then run the new on that you have pulled
 
+Note: Remove a docker image 
+```
+docker rmi -f image_id
+```
+
 ## Docker cheat-sheet
 ```
 A self-sufficient runtime for containers

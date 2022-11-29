@@ -1,0 +1,26 @@
+# use spaces not tabs
+apiVersion: apps/v1 # Which api to use
+kind: Deployment # What type of service/object do you want to create
+
+# What do you want to call the deployment 
+metadata: 
+  name: node-deploy # name of deployment
+spec: 
+  selector:
+    matchLabels:
+      app: node # Look for this label to match with k8 service
+
+  # How many pods to create
+  replicas: 3
+  
+  template:
+    metadata: 
+      labels: 
+        app: node # This label conneccts to the service or any other k8 components 
+    # Container spec
+    spec: 
+      containers:
+      - name: node # name of containers
+        image: lsf970/eng130_app_v1:latest # image to use
+        ports:
+         - containerPort: 3000 # port for the containers created
