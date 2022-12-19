@@ -24,3 +24,8 @@ spec:
         image: lsf970/eng130_luke_cv:latest # image to use
         ports:
          - containerPort: 80 # port for the containers created
+        resources: 
+          limits:
+            cpu: 500m
+          requests:
+            cpu: 200m

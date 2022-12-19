@@ -20,4 +20,4 @@ spec:
     app: nginx # This label connects this service to the deployment
 
   # Creating NodePort type of deployment
-  type: NodePort # Also use LoadBalancer - for local use cluster IP
+  type: LoadBalancer # Also use LoadBalancer - for local use cluster IP
